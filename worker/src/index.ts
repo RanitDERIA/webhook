@@ -22,7 +22,8 @@ async function main(){
                 offset: message.offset,
                 value: message.value?.toSting(),
             })
-            await new Promise(r => setTimeout(r, 1000));
+
+            const zapId = message.value?.toString();
             await consumer.commitOffsets([{
                 topic: TOPIC_NAME,
                 partition: partition,

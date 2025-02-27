@@ -1,5 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// This is your Prisma schema file
+// Learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
@@ -18,29 +18,33 @@ model User {
   name     String
   email    String @unique
   password String
+  zaps     Zap[]
 }
 
 model Zap {
   id      String   @id @default(uuid())
-  trigger Trigger? // Fix: Removed `@relation` with `fields` and `references`
+  userId  Int      // ✅ Added missing foreign key field
+  trigger Trigger?
   actions Action[]
   zapRuns ZapRun[]
+  User    User @relation(fields: [userId], references: [id]) // ✅ Corrected relation
 }
 
 model Trigger {
-  id        String           @id @default(uuid())
-  zapId     String           @unique
-  triggerId String
-  type      AvailableTrigger @relation(fields: [triggerId], references: [id])
-  zap       Zap              @relation(fields: [zapId], references: [id]) // Fix: Keep @relation only here
+  id            String           @id @default(uuid())
+  zapId         String           @unique
+  triggerId     String
+  type          AvailableTrigger @relation(fields: [triggerId], references: [id])
+  zap           Zap              @relation(fields: [zapId], references: [id])
 }
 
 model Action {
-  id       String          @id @default(uuid())
-  zapId    String
-  zap      Zap             @relation(fields: [zapId], references: [id])
-  actionId String
-  action   AvailableAction @relation(fields: [actionId], references: [id])
+  id           String          @id @default(uuid())
+  zapId        String
+  zap          Zap             @relation(fields: [zapId], references: [id])
+  actionId     String
+  action       AvailableAction @relation(fields: [actionId], references: [id])
+  sortingOrder Int             @default(0)
 }
 
 model AvailableAction {
@@ -56,11 +60,11 @@ model AvailableTrigger {
 }
 
 model ZapRun {
-  id            String @id @default(uuid())
-  zapId         String 
-  metadata      Json
-  zap           Zap @relation(fields:[zapId], references:[id])
-  zapRunOutbox  ZapRunOutbox?
+  id           String  @id @default(uuid())
+  zapId        String
+  metadata     Json
+  zap          Zap @relation(fields:[zapId], references:[id])
+  zapRunOutbox ZapRunOutbox?
 }
 
 model ZapRunOutbox {
@@ -68,4 +72,3 @@ model ZapRunOutbox {
   zapRunId String @unique
   zapRun   ZapRun @relation(fields: [zapRunId], references: [id])
 }
-
