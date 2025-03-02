@@ -5,6 +5,7 @@
     "@types/express": "^5.0.0",
     "cors": "^2.8.5",
     "express": "^4.21.2",
+    "lucide-react": "^0.477.0",
     "typescript": "^5.7.3"
   }
 }

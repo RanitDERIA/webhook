@@ -4,7 +4,9 @@ exports.ZapCreateSchema = void 0;
 const zod_1 = require("zod");
 exports.ZapCreateSchema = zod_1.z.object({
     availableTriggerId: zod_1.z.string(),
+    triggerMetadata: zod_1.z.object({}).optional(),
     actions: zod_1.z.array(zod_1.z.object({
-        availableActionId: zod_1.z.string()
+        availableActionId: zod_1.z.string(), // ✅ Ensure it matches request
+        actionMetadata: zod_1.z.object({}).optional()
     }))
 });
